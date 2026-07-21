@@ -141,6 +141,7 @@ import { TextInputModal } from '../../../../src/components/TextInputModal'
 import { ConfirmModal } from '../../../../src/components/ConfirmModal'
 import { MobileRichMarkdownEditor } from '../../../../src/components/MobileRichMarkdownEditor'
 import { MobileSyntaxSegments } from '../../../../src/components/MobileSyntaxSegments'
+import { MobileSessionMarkdownFilePreview } from '../../../../src/session/MobileSessionMarkdownFilePreview'
 import {
   CustomKeyModal,
   loadCustomKeys,
@@ -769,6 +770,10 @@ function FileReader({
         </ScrollView>
       </View>
     )
+  }
+
+  if (doc.kind === 'markdown') {
+    return <MobileSessionMarkdownFilePreview relativePath={relativePath} doc={doc} />
   }
 
   const renderSourceText = (content: string) => (

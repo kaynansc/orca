@@ -11,6 +11,7 @@ type FileTabDocClient = Pick<RpcClient, 'sendRequest'>
 // FileDocState; kept in src so the loader stays testable without the route.
 export type MobileFileTabDoc =
   | { status: 'ready'; kind: 'file'; content: string; truncated: boolean; byteLength: number }
+  | { status: 'ready'; kind: 'markdown'; content: string; truncated: boolean; byteLength: number }
   | { status: 'ready'; kind: 'diff'; lines: MobileDiffLine[]; truncated: boolean }
   | { status: 'ready'; kind: 'image'; dataUri: string }
   | { status: 'ready'; kind: 'html'; content: string }
@@ -83,6 +84,15 @@ export async function resolveMobileFileTabDoc(
   }
   if (artifactKind === 'html') {
     return { status: 'ready', kind: 'html', content: result.content }
+  }
+  if (artifactKind === 'markdown') {
+    return {
+      status: 'ready',
+      kind: 'markdown',
+      content: result.content,
+      truncated: result.truncated,
+      byteLength: result.byteLength
+    }
   }
   return {
     status: 'ready',

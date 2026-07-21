@@ -17,8 +17,14 @@ describe('classifyMobileArtifact', () => {
     expect(classifyMobileArtifact('a/b/page.HTM')).toBe('html')
   })
 
+  it('classifies markdown extensions', () => {
+    expect(classifyMobileArtifact('README.md')).toBe('markdown')
+    expect(classifyMobileArtifact('docs\\guide.MDX')).toBe('markdown')
+    expect(classifyMobileArtifact('notes.markdown')).toBe('markdown')
+  })
+
   it('treats code/text/unknown as other', () => {
-    for (const p of ['main.ts', 'README.md', 'data.csv', 'notes', 'a.pdf', 'x.json']) {
+    for (const p of ['main.ts', 'data.csv', 'notes', 'a.pdf', 'x.json']) {
       expect(classifyMobileArtifact(p)).toBe('other')
     }
   })

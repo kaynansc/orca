@@ -113,6 +113,21 @@ describe('resolveMobileFileTabDoc', () => {
     expect(doc).toEqual({ status: 'ready', kind: 'html', content: '<h1>hi</h1>' })
   })
 
+  it('routes a markdown file through the rendered file preview', async () => {
+    const client = clientOf({
+      'files.read': ok({ content: '# Heading', truncated: false, byteLength: 9 })
+    })
+    const doc = await resolveMobileFileTabDoc(client, { ...WT, relativePath: 'docs/guide.MDX' })
+    expect(doc).toEqual({
+      status: 'ready',
+      kind: 'markdown',
+      content: '# Heading',
+      truncated: false,
+      byteLength: 9
+    })
+    expect(client.calls).toEqual(['files.read'])
+  })
+
   it('renders a plain text file via files.read', async () => {
     const client = clientOf({
       'files.read': ok({ content: 'hello', truncated: true, byteLength: 5 })

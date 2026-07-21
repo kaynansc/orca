@@ -1,8 +1,7 @@
 // Classifies a file path into how the mobile viewer should render it. Images
-// route through files.readPreview (base64) and render as an <Image>; HTML routes
-// through files.read (text) and renders in a sandboxed WebView with a source
-// toggle; everything else stays on the existing text/syntax path.
-export type MobileArtifactKind = 'image' | 'html' | 'other'
+// route through files.readPreview (base64); HTML and Markdown reuse their
+// existing rich previews; everything else stays on the text/syntax path.
+export type MobileArtifactKind = 'image' | 'html' | 'markdown' | 'other'
 
 // Raster image extensions React Native's <Image> can decode from a base64 data
 // URI (host returns these via files.readPreview). SVG is intentionally excluded:
@@ -11,6 +10,7 @@ export type MobileArtifactKind = 'image' | 'html' | 'other'
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico'])
 
 const HTML_EXTENSIONS = new Set(['html', 'htm'])
+const MARKDOWN_EXTENSIONS = new Set(['md', 'mdx', 'markdown'])
 
 function extensionOf(path: string): string {
   const base = path.split(/[\\/]/).pop() ?? ''
@@ -29,6 +29,9 @@ export function classifyMobileArtifact(path: string): MobileArtifactKind {
   }
   if (HTML_EXTENSIONS.has(ext)) {
     return 'html'
+  }
+  if (MARKDOWN_EXTENSIONS.has(ext)) {
+    return 'markdown'
   }
   return 'other'
 }
